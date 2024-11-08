@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beheer - Leden Toevoegen en Zoeken</title>
+    <style>
+        /* Algemene styling voor de website */
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fafafa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header met banner */
+        header {
+            background: linear-gradient(135deg, #f7a600, #007bff); /* Geel naar blauw gradient */
+            padding: 100px 20px;  /* Grote hoogte voor de banner */
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            z-index: 5;
+        }
+
+        header img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin: 20px 0;
+            text-transform: uppercase;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        /* Navigatie menu */
+        nav {
+            background-color: #333;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 10;
+        }
+
+        nav a {
+            color: white;
+            font-weight: 500;
+            padding: 12px 20px;
+            text-decoration: none;
+            margin: 0 20px;
+            text-transform: uppercase;
+            border-radius: 30px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #28a745; /* Groen hover-effect */
+            transform: scale(1.1);
+        }
+
+        /* Leden Toevoegen sectie */
+        .leden-toevoegen {
+            padding: 50px 20px;
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .leden-toevoegen h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .leden-toevoegen form {
+            display: grid;
+            grid-gap: 20px;
+            text-align: left;
+        }
+
+        .leden-toevoegen label {
+            font-size: 1.1rem;
+        }
+
+        .leden-toevoegen input,
+        .leden-toevoegen select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .leden-toevoegen button {
+            padding: 12px;
+            background-color: #f7a600; /* Geel */
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .leden-toevoegen button:hover {
+            background-color: #28a745; /* Groen bij hover */
+            transform: translateY(-3px); /* Kleine opheffing bij hover */
+        }
+
+        /* Leden Lijst */
+        .leden-lijst {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        .leden-lijst h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .leden-lijst table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .leden-lijst table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        .leden-lijst th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        .leden-lijst th {
+            background-color: #f7a600;
+            color: white;
+        }
+
+        .leden-lijst td {
+            background-color: #f9f9f9;
+        }
+
+        /* Zoekbalk styling */
+        .search-box {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .search-box input {
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 50%;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .action-buttons button {
+            padding: 8px 16px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .action-buttons button.edit {
+            background-color: #f7a600;
+            color: white;
+        }
+
+        .action-buttons button.edit:hover {
+            background-color: #e68900;
+        }
+
+        .action-buttons button.delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .action-buttons button.delete:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+
+    <!-- Navigatie menu -->
+    <nav>
+        <a href="index.html">Home</a>
+  
+    </nav>
+
+    <!-- Leden Toevoegen Sectie -->
+    <section class="leden-toevoegen">
+        <h1>Lid Toevoegen</h1>
+
+        <!-- Success & Error Message -->
+        <div class="success-message" id="success-message" style="display:none;">Lid succesvol toegevoegd!</div>
+        <div class="error-message" id="error-message" style="display:none;">Er is iets misgegaan! Controleer de gegevens.</div>
+
+        <form id="leden-form">
+            <label for="name">Naam:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="address">Adres:</label>
+            <input type="text" id="address" name="address" required>
+
+            <label for="age">Leeftijd:</label>
+            <input type="number" id="age" name="age" required>
+
+            <label for="payment-status">Betaalstatus:</label>
+            <select id="payment-status" name="payment-status">
+                <option value="niet-betaald" selected>Niet Betaald</option>
+                <option value="betaald">Betaald</option>
+            </select>
+
+            <label for="rental-history">Eerdere Huur:</label>
+            <select id="rental-history" name="rental-history">
+                <option value="nee" selected>Nee</option>
+                <option value="ja">Ja</option>
+            </select>
+
+            <label for="product">Product:</label>
+            <select id="product" name="product">
+                <option value="niets" selected>Niets</option>
+                <option value="surfplank">Surfplank</option>
+                <option value="supboard">SUP Board</option>
+            </select>
+
+            <label for="member-status">Lidmaatschapsstatus:</label>
+            <select id="member-status" name="member-status">
+                <option value="nee" selected>Nee</option>
+                <option value="ja">Ja</option>
+            </select>
+
+            <button type="button" onclick="addMember()">Lid Toevoegen</button>
+        </form>
+    </section>
+
+    <!-- Zoekbalk -->
+    <section class="search-box">
+        <input type="text" id="search-input" placeholder="Zoek naar leden..." onkeyup="searchMembers()">
+    </section>
+
+    <!-- Leden Lijst -->
+    <section class="leden-lijst">
+        <h2>Alle Leden</h2>
+        <table id="leden-table">
+            <thead>
+                <tr>
+                    <th>Naam</th>
+                    <th>Adres</th>
+                    <th>Leeftijd</th>
+                    <th>Betaalstatus</th>
+                    <th>Eerdere Huur</th>
+                    <th>Product</th>
+                    <th>Lidmaatschap</th>
+                    <th>Acties</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Leden worden hier dynamisch toegevoegd -->
+            </tbody>
+        </table>
+    </section>
+
+    <script>
+        let editingIndex = null;  // Houdt bij welk lid je aan het bewerken bent
+
+        // Voeg een nieuw lid toe aan de localStorage
+        function addMember() {
+            const name = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+            const age = document.getElementById('age').value;
+            const paymentStatus = document.getElementById('payment-status').value;
+            const rentalHistory = document.getElementById('rental-history').value;
+            const product = document.getElementById('product').value;
+            const memberStatus = document.getElementById('member-status').value;
+
+            const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
+
+            if (name && address && age && paymentStatus && rentalHistory && product && memberStatus) {
+                const member = {
+                    name,
+                    address,
+                    age,
+                    paymentStatus,
+                    rentalHistory,
+                    product,
+                    memberStatus
+                };
+
+                let members = JSON.parse(localStorage.getItem('members')) || [];
+
+                if (editingIndex === null) {
+                    // Voeg het nieuwe lid toe
+                    members.push(member);
+                } else {
+                    // Werk het bestaande lid bij
+                    members[editingIndex] = member;
+                    editingIndex = null;  // Reset de index na bewerking
+                }
+
+                localStorage.setItem('members', JSON.stringify(members));
+
+                successMessage.style.display = "block";
+                errorMessage.style.display = "none";
+
+                document.getElementById('leden-form').reset();
+                loadMembers();
+            } else {
+                successMessage.style.display = "none";
+                errorMessage.style.display = "block";
+            }
+        }
+
+        // Laad de ledenlijst
+        function loadMembers() {
+            const members = JSON.parse(localStorage.getItem('members')) || [];
+            const tableBody = document.getElementById('leden-table').getElementsByTagName('tbody')[0];
+
+            tableBody.innerHTML = '';
+
+            members.forEach((member, index) => {
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td>${member.name}</td>
+                    <td>${member.address}</td>
+                    <td>${member.age}</td>
+                    <td>${member.paymentStatus}</td>
+                    <td>${member.rentalHistory}</td>
+                    <td>${member.product}</td>
+                    <td>${member.memberStatus}</td>
+                    <td class="action-buttons">
+                        <button class="edit" onclick="editMember(${index})">Bewerken</button>
+                        <button class="delete" onclick="deleteMember(${index})">Verwijderen</button>
+                    </td>
+                `;
+            });
+        }
+
+        // Bewerken van een lid
+        function editMember(index) {
+            const members = JSON.parse(localStorage.getItem('members')) || [];
+            const member = members[index];
+
+            document.getElementById('name').value = member.name;
+            document.getElementById('address').value = member.address;
+            document.getElementById('age').value = member.age;
+            document.getElementById('payment-status').value = member.paymentStatus;
+            document.getElementById('rental-history').value = member.rentalHistory;
+            document.getElementById('product').value = member.product;
+            document.getElementById('member-status').value = member.memberStatus;
+
+            editingIndex = index;
+        }
+
+        // Verwijderen van een lid
+        function deleteMember(index) {
+            const members = JSON.parse(localStorage.getItem('members')) || [];
+            members.splice(index, 1);
+            localStorage.setItem('members', JSON.stringify(members));
+            loadMembers();
+        }
+
+        // Zoekfunctie voor leden
+        function searchMembers() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const members = JSON.parse(localStorage.getItem('members')) || [];
+            const tableBody = document.getElementById('leden-table').getElementsByTagName('tbody')[0];
+
+            tableBody.innerHTML = '';
+
+            members.forEach((member, index) => {
+                if (member.name.toLowerCase().includes(searchTerm) || member.product.toLowerCase().includes(searchTerm)) {
+                    const row = tableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${member.name}</td>
+                        <td>${member.address}</td>
+                        <td>${member.age}</td>
+                        <td>${member.paymentStatus}</td>
+                        <td>${member.rentalHistory}</td>
+                        <td>${member.product}</td>
+                        <td>${member.memberStatus}</td>
+                        <td class="action-buttons">
+                            <button class="edit" onclick="editMember(${index})">Bewerken</button>
+                            <button class="delete" onclick="deleteMember(${index})">Verwijderen</button>
+                        </td>
+                    `;
+                }
+            });
+        }
+
+        // Laad de ledenlijst bij het laden van de pagina
+        window.onload = loadMembers;
+    </script>
+
+</body>
+</html>
